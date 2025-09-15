@@ -1,0 +1,57 @@
+*/
+
+
+// 1. logica de programacao -> aprender como o computador pensa
+// e como se comunicar com ele
+
+// 2. Algoritmos -> conjunto de passos para resolver um problema
+// { } 1 passo, 2 passo, 3 passo
+
+// 3. Linguagem de programacao -> conjunto de regras e palavras
+// reservadas que o computador entende
+/*
+ALgoritmo Café
+SE a cafeteira estiver ligada na tomada seguir para o proximo passo
+SE nao estiver ligada, ligar a cafeteira na tomada
+SE o nivel de agua estiver baixo, encher o reservatorio de agua
+SE nao estiver baixo, seguir para o proximo passo   
+
+if (cafeteira.ligadaNaTomada() == true) {
+    // seguir para o proximo passo
+}   
+else {
+    cafeteira.ligarNaTomada()
+}
+
+
+console.log("Hello World");
+// O QUE SÃO VARIAVEIS?;
+// 
+var -> NAO USAR MAIS -> escopo global, pode ser redeclarada e alterada; 
+
+variaveis -> armazenar informacoes na memoria do computador;
+
+let -> atual = , const = valor constante nao muda;
+
+let numerodealunosdasalasete = 30 // number -> numero
+
+let nome = "Joao" // string -> texto;
+let idade = 25 // number -> numero;
+let altura = 1.75 // number -> numero;
+let estudante = true // boolean -> true ou false;
+
+let alunos = ["Joao", "Maria", "Pedro", "Ana"] // array -> lista de informacoes;
+
+let pessoa = {nome: "Joao", idade: 25, altura: 1.75, estudante: true} // object -> objeto com varias informacoes;
+let numerodealunosdasalasete = 30 // number -> numero
+
+O QUE SÃO STRINGS? -> texto
+"Joao" -- aspas duplas
+'Joao' -- aspas simples 
+`Joao
+25
+1.75` // template string -> permite interpolacao de variaveis e expressoes dentro da string
+
+
+
+*/

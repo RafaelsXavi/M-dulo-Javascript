@@ -1,0 +1,3 @@
+- [x] Update style.css to add CSS for flip card animation
+- [x] Update scripts.js to modify card structure with front and back sides, and add click event listener
+- [ ] Test the flip functionality by opening the page in browser
