@@ -7,19 +7,12 @@ const select = document.querySelector("select");
 const button = document.querySelector("button");
 
 function troqueivalor(event) {
-    console.log(event.target.value);
+    console.log(event);
 }
 
 
-select.addEventListener("change", troqueivalor)
+input.addEventListener("keypress", troqueivalor);
+select.addEventListener("change", troqueivalor);
+button.addEventListener("click", troqueivalor);
 
 
-
-function clickButton() {
-    console.log(input.value);
-}
-
-
-function digiteinoinput() {
-    console.log("Digitei no input");
-}
