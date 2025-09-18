@@ -29,10 +29,20 @@ function convertValues (){
     const realValueText = document.querySelector(".currency-box .currency-value")
     const dolarValueText = document.querySelectorAll(".currency-value")[1]
     const currencyText = document.querySelectorAll(".currency")[1]
+    const currencyImage = document.querySelectorAll(".currency-box img")[1]
 
     realValueText.textContent = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(inputvalue)
     dolarValueText.textContent = new Intl.NumberFormat('en-US', { style: 'currency', currency: currencyCode }).format(convertedValue)
     currencyText.textContent = currencyToConvert
+
+    // Atualizar a imagem da moeda
+    if(currencyToConvert === "US$ Dólar"){
+        currencyImage.src = "./assets/estados-unidos (1) 1.png"
+        currencyImage.alt = "Dólar"
+    } else if(currencyToConvert === "€ Euro"){
+        currencyImage.src = "./assets/euro-golden-logo-png_253745.jpg"
+        currencyImage.alt = "Euro"
+    }
 }
 
 convertbutton.addEventListener("click", convertValues)
