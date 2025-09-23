@@ -1,0 +1,178 @@
+{
+  "name": "Fast Food AI Order Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "order-webhook"
+      },
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const order = $json;\n// Validação simples\nif (!order.items || order.items.length === 0) {\n  throw new Error('Pedido vazio');\n}\nreturn order;"
+      },
+      "name": "Validate Order",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "messages": [
+          {
+            "role": "system",
+            "content": "Você é um assistente que sugere complementos para pedidos de fast food."
+          },
+          {
+            "role": "user",
+            "content": "Pedido: {{$json[\"items\"].map(i => i.name).join(\", \")}}. Sugira complementos ou combos."
+          }
+        ]
+      },
+      "name": "AI Recommendation",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const prices = {\n  'Hambúrguer': 15,\n  'Batata Frita': 8,\n  'Refrigerante': 5,\n  'Combo': 25\n};\n\nlet total = 0;\nfor (const item of $json.items) {\n  total += prices[item.name] ? prices[item.name] * item.quantity : 0;\n}\nreturn { json: { total } };"
+      },
+      "name": "Calculate Total",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "functionCode": "const inventory = $json.inventory || {};\nfor (const item of $json.items) {\n  if (inventory[item.name]) {\n    inventory[item.name] -= item.quantity;\n  }\n}\nreturn { json: { inventory } };"
+      },
+      "name": "Update Inventory",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "from": "+15551234567",
+        "to": "={{$json.contactNumber}}",
+        "message": "Olá {{$json.customerName}}, seu pedido foi recebido! Total: R$ {{$json.total}}. Recomendação: {{$json['AI Recommendation'].choices[0].message.content}}"
+      },
+      "name": "Send WhatsApp",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "sheetId": "your-google-sheet-id",
+        "range": "Pedidos!A1",
+        "valueInputMode": "USER_ENTERED",
+        "options": {},
+        "values": [
+          [
+            "={{$json.orderId}}",
+            "={{$json.customerName}}",
+            "={{$json.contactNumber}}",
+            "={{$json.items.map(i => i.name + ' x' + i.quantity).join(', ')}}",
+            "={{$json.total}}",
+            "={{new Date().toISOString()}}"
+          ]
+        ]
+      },
+      "name": "Save to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 1,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "channel": "#pedidos",
+        "text": "Novo pedido de {{$json.customerName}}: {{$json.items.map(i => i.name + ' x' + i.quantity).join(', ')}}, Total: R$ {{$json.total}}"
+      },
+      "name": "Notify Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1650, 300]
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate Order",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Order": {
+      "main": [
+        [
+          {
+            "node": "AI Recommendation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Recommendation": {
+      "main": [
+        [
+          {
+            "node": "Calculate Total",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculate Total": {
+      "main": [
+        [
+          {
+            "node": "Update Inventory",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Inventory": {
+      "main": [
+        [
+          {
+            "node": "Send WhatsApp",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Save to Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "Notify Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}
