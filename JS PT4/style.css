@@ -1,0 +1,20 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f0f0f0;
+}
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+
+/* 
+ --- IGNORE ---
+ 1 - O loop "for" é uma estrutura de controle que permite repetir um bloco de código várias vezes.
+ 2 - Ele é composto por três partes principais: inicialização, condição e incremento.
+ 3 - A inicialização é executada uma vez no início do loop, geralmente usada para definir a variável de controle.
