@@ -12,6 +12,17 @@ const contacts = [
 {name: 'Lucas', phone: '7890-1234'}
 
 ];
+
+function search(){
+
+for(const contact of contacts){
+    if(contact.name.toLowerCase() === input.value.toLowerCase()){
+        p.textContent = `Telefone de ${contact.name}: ${contact.phone}`;
+        input.value = '';
+        return;
+    }
+}}
+/*
 function search(){
     let name = input.value;
     let found = false;
@@ -48,7 +59,7 @@ input.addEventListener('keyup', function(event){
         input.value = '';
     }
 });
-/*Estrututra de repetição FOR
+Estrututra de repetição FOR
  1 - for (inicialização; condição; incremento) {
       // código a ser executado
     }
