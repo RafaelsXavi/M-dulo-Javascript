@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto Jokenpow</title>
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+    <div class="container">
+        <h1>Jokenpow</h1>
+        <div class="scoreboard">
+            <div class="score player-score">
+                Jogador: <span id="player-score">0</span>
+            </div>
+            <div class="score computer-score">
+                Máquina: <span id="computer-score">0</span>
+            </div>
+        </div>
+        <div class="choices">
+            <button class="choice-btn" data-choice="pedra" aria-label="Pedra">✊</button>
+            <button class="choice-btn" data-choice="papel" aria-label="Papel">✋</button>
+            <button class="choice-btn" data-choice="tesoura" aria-label="Tesoura">✌️</button>
+        </div>
+        <div class="result">
+            <p id="result-message">Faça sua jogada!</p>
+            <p>Você escolheu: <span id="player-choice">-</span></p>
+            <p>Máquina escolheu: <span id="computer-choice">-</span></p>
+        </div>
+    </div>
+    
+</body>
+<script src="scripts.js" defer></script>
+</html>
