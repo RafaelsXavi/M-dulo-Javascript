@@ -14,17 +14,22 @@ const users = [
     {name: 'maria', age: 28, Number: '(11)654321987'},//2
     {name: 'joao', age: 35, Number: '(11)789123456'}//3
 ]
-
-users.forEach(function(item, index) {
-    console.log(`${index + 1} Nome: ${user.name}, Idade: ${user.age}, Telefone: ${user.Number}`)}
-)
 /*
-users.forEach( (user, index, arr) => {
-    console.log(`Nome: ${user.name}, Idade: ${user.age}, Telefone: ${user.Number}`);
-    console.log(`Index: ${index}`);
-    console.log(arr);
-    console.log('---');
-});
+users.forEach(item => console.log(item.name));
+rafael
+carlos
+maria
+joao
+*/
+
+
+users.forEach( function(item, index, array) {
+    console.log(`${index + 1} O usuário: ${item.name}, tem ${item.age} anos de idade, seu telefone de contato é ${item.Number}`);
+    }
+);
+/*
+Nome: rafael, Idade: 23, Telefone: (11)123456789
+
 
 //for ( const user of users){
  //   console.log(`Nome: ${user.name}, Idade: ${user.age}, Telefone: ${user.Number}`);
