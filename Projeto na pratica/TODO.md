@@ -1,0 +1,4 @@
+- [x] Integrate AwesomeAPI for real-time exchange rates
+- [x] Update convertValues function to fetch rates asynchronously
+- [x] Handle API errors and loading states
+- [x] Test the updated app with API

@@ -1,84 +1,123 @@
 /*Lógica da programação =  Receita de Bolo Trabalhar Passo a Passo*/
 //JS é case sensitive = reconhece letras maiúsculas e minúsculas
-//Declaração de variável 
+//Declaração de variável
 const convertbutton = document.getElementById("convert-button")
-const currencySelect = document.getElementById("currency-select")
+const currencyFromSelect = document.getElementById("currency-from")
+const currencyToSelect = document.getElementById("currency-to")
 
-function convertValues() {
-    const inputvalue = document.querySelector(".input-value").value
-    const currencyToConvert = document.querySelectorAll("select")[1].value
 
-    console.log(currencySelect)
+
+const getExchangeRate = async (from, to) => {
+    if (from === to) return 1;
+
+    const apiUrl = `https://economia.awesomeapi.com.br/json/last/${from}-${to}`;
+    try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        const key = `${from}${to}`;
+        return parseFloat(data[key].bid);
+    } catch (error) {
+        console.error("Erro ao buscar taxa de câmbio:", error);
+        alert("Erro ao obter taxas de câmbio. Usando valores aproximados.");
+        // Fallback para taxas aproximadas
+        const fallbackRates = {
+            "USD-BRL": 5.25,
+            "EUR-BRL": 6.31,
+            "BTC-BRL": 134000,
+            "BRL-USD": 0.1905,
+            "EUR-USD": 1.204,
+            "BTC-USD": 25500,
+            "BRL-EUR": 0.1584,
+            "USD-EUR": 0.830,
+            "BTC-EUR": 21200,
+            "BRL-BTC": 0.00000746,
+            "USD-BTC": 0.0000392,
+            "EUR-BTC": 0.0000471
+        };
+        const key = `${from}-${to}`;
+        return fallbackRates[key] || 1;
+    }
+};
+
+const convertValues = async () => {
+    const inputvalue = parseFloat(document.querySelector(".input-value").value);
+    const currencyFrom = currencyFromSelect.value;
+    const currencyTo = currencyToSelect.value;
+
     console.log("convertValues")
     console.log("Valor digitado:", inputvalue)
-    console.log("Moeda para converter:", currencyToConvert)
+    console.log("Moeda de:", currencyFrom)
+    console.log("Moeda para:", currencyTo)
 
-    // Cotações fixas
-    const dolarToday = 5.25
-    const euroToday = 6.31
-    const realToday = 1
-    const bitcoinToday = 134.000
-
-    let convertedValue = 0
-    let currencyCode = ""
-
-
-    if (currencyToConvert === "bitcoin") {
-        convertedValue = inputvalue / bitcoinToday
-        currencyCode = "btc"
+    if (isNaN(inputvalue) || inputvalue <= 0) {
+        alert("Por favor, insira um valor válido.");
+        return;
     }
-    if (currencyToConvert === "real") {
-        convertedValue = inputvalue / realToday
-        currencyCode = "BRL"
-    }
-    if (currencyToConvert === "dolar") {
-        convertedValue = inputvalue / dolarToday
-        currencyCode = "USD"
-    }
-    if (currencyToConvert === "euro") {
-        convertedValue = inputvalue / euroToday
-        currencyCode = "EUR"
+
+    // Mapear valores para códigos da API
+    const currencyCodes = {
+        real: "BRL",
+        dolar: "USD",
+        euro: "EUR",
+        bitcoin: "BTC"
+    };
+
+    const fromCode = currencyCodes[currencyFrom];
+    const toCode = currencyCodes[currencyTo];
+
+    // Obter taxa de câmbio
+    const rate = await getExchangeRate(fromCode, toCode);
+    const convertedValue = inputvalue * rate;
+
+    let currencyCode = "";
+    let currencyName = "";
+    let currencyImageSrc = "";
+
+    switch (currencyTo) {
+        case "real":
+            currencyCode = "BRL";
+            currencyName = "Real";
+            currencyImageSrc = "./assets/brasil 2.png";
+            break;
+        case "dolar":
+            currencyCode = "USD";
+            currencyName = "Dólar";
+            currencyImageSrc = "./assets/estados-unidos (1) 1.png";
+            break;
+        case "euro":
+            currencyCode = "EUR";
+            currencyName = "Euro";
+            currencyImageSrc = "./assets/icons8-euro-48.png";
+            break;
+        case "bitcoin":
+            currencyCode = "BTC";
+            currencyName = "Bitcoin";
+            currencyImageSrc = "./assets/icons8-bitcoin-96.png";
+            break;
     }
 
     // Atualizar os valores na página
-    const realValueText = document.querySelector(".currency-box .currency-value")
-    const dolarValueText = document.querySelectorAll(".currency-value")[1]
-    const currencyText = document.querySelectorAll(".currency")[1]
-    const currencyImage = document.querySelectorAll(".currency-box img")[1]
+    const fromValueText = document.querySelector(".currency-box .currency-value")
+    const toValueText = document.querySelectorAll(".currency-value")[1]
+    const toCurrencyText = document.querySelectorAll(".currency")[1]
+    const toCurrencyImage = document.querySelectorAll(".currency-box img")[1]
 
-    realValueText.textContent = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(inputvalue)
-    dolarValueText.textContent = new Intl.NumberFormat('en-US', { style: 'currency', currency: currencyCode }).format(convertedValue)
-
-    // Atualizar a imagem da moeda e texto
-    if (currencyToConvert === "real") {
-        currencyImage.src = "./brasil.png"
-        currencyImage.alt = "real"
-        currencyText.textContent = "real"
-    }
-    if (currencyToConvert === "bitcoin") {
-        currencyImage.src = "./assets/bitcoin.png"
-        currencyImage.alt = "bitcoin"
-        currencyText.textContent = "bitcoin"
-    }
-    if (currencyToConvert === "dolar") {
-        currencyImage.src = "./assets/estados-unidos (1) 1.png"
-        currencyImage.alt = "Dolar"
-        currencyText.textContent = "Dolar"
-    }
-    if (currencyToConvert === "euro") {
-        currencyImage.src = "./assets/icons8-euro-48.png"
-        currencyImage.alt = "Euro"
-        currencyText.textContent = "Euro"
+    // Formatar valor de entrada
+    let fromCurrencyCode = "";
+    switch (currencyFrom) {
+        case "real": fromCurrencyCode = "BRL"; break;
+        case "dolar": fromCurrencyCode = "USD"; break;
+        case "euro": fromCurrencyCode = "EUR"; break;
+        case "bitcoin": fromCurrencyCode = "BTC"; break;
     }
 
-    // Chamar a função de conversão ao mudar a seleção da moeda
-
-
-
+    fromValueText.textContent = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: fromCurrencyCode }).format(inputvalue)
+    toValueText.textContent = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: currencyCode }).format(convertedValue)
+    toCurrencyText.textContent = currencyName
+    toCurrencyImage.src = currencyImageSrc
+    toCurrencyImage.alt = currencyName
 }
-
-
 
 convertbutton.addEventListener("click", convertValues)
 
-document.querySelectorAll("select")[1].addEventListener("change", convertValues)
+currencyToSelect.addEventListener("change", convertValues)
